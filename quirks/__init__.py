@@ -1,4 +1,4 @@
-from .utils import Quirk, Instructions
+from .utils import Quirk, Instructions, Variables
 
 class CStr(object):
     def __init__(self, sep, lot):
@@ -44,6 +44,17 @@ class C(object):
         return f'SET {var} TO {val}'
 
 
+# Quirk Variables go here
+class Volume(object):
+    def __init__(self, vol=100): # 100% is normal, 1% is whispering as quiet as possible, 1000% is the loudest possible
+        self.vol = vol
+
+    def __str__(self):
+        return str(self.vol)+"%"
+
+    def volume(self, vol=100):
+        self.vol = vol
+
 # Quirk Definitions go here
 Erasure = Quirk(
   name="Erasure",
@@ -64,15 +75,36 @@ Erasure = Quirk(
   )
 )
 
+
 Voice = Quirk(
   name="Voice",
   conditions=Instructions(
     C.THEN("Take a deep breath", "shout loudly")
   ),
   peffects=Instructions(
-    f"Amplify voice to {C.QUIRK_HOLDER}'s desired volume"
+    f"Amplify {C.QUIRK_HOLDER}'s voice to VOLUME"
   ),
   deactivation=Instructions(
     "Stop shouting"
+  ),
+  vars=Variables(
+    ("Volume",),
+    (Volume(),)
   )
 )
+
+
+OneForAll = Quirk(
+  name="One For All",
+  conditions=Instructions(
+  ),
+  peffects=Instructions(
+  ),
+  seffects=Instructions(
+  ),
+  deactivation=Instructions(
+  ),
+  vars=Variables(
+  )
+)
+

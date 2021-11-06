@@ -1,6 +1,22 @@
 class TooManyPatches(Exception):
     pass
 
+class Variables(object):
+    def __init__(self, vars=[], values=[]):
+        self._vars = vars
+        self._indent_multiplier = 2
+        self.vars = []
+        for var, val in zip(vars, values):
+            setattr(self, var, val)
+            setattr(getattr(self, var), 'name', var)
+            self.vars.append(var)
+
+    def __str__(self):
+        tmp = ""
+        for var in self.vars:
+            tmp += ("  "*self._indent_multiplier+"⟩ "+var+" = "+str(getattr(self, var))+" ⟨\n")
+        return tmp
+
 
 class Instructions(object):
     def __init__(self, *instructions):
@@ -49,12 +65,13 @@ class Instructions(object):
 Quirks = []
 
 class Quirk(object):
-    def __init__(self, name="Base Quirk", conditions=Instructions(), peffects=Instructions(), seffects=Instructions(), deactivation=Instructions(), limit=100):
+    def __init__(self, name="Base Quirk", conditions=Instructions(), peffects=Instructions(), seffects=Instructions(), deactivation=Instructions(), vars=Variables(), limit=100):
         self.name = name
         self.conditions = conditions
         self.peffects = peffects
         self.seffects = seffects
         self.deactivation = deactivation
+        self.vars = vars
         self.instructions_count = len(conditions.instructions) + len(peffects.instructions) + len(seffects.instructions) + len(deactivation.instructions)
         if limit < self.instructions_count:
             raise TooManyPatches(f"You have attempted to add {self.instructions_count} patches, when you can only have a maximum of {limit}.")
@@ -62,10 +79,12 @@ class Quirk(object):
         Quirks.append(self)
 
     def __str__(self) -> str:
-        im = (self.conditions._indent_multiplier, self.peffects._indent_multiplier, self.seffects._indent_multiplier, self.deactivation._indent_multiplier)
+        im = (self.vars._indent_multiplier, self.conditions._indent_multiplier, self.peffects._indent_multiplier, self.seffects._indent_multiplier, self.deactivation._indent_multiplier)
 
-        self.conditions._indent_multiplier = self.peffects._indent_multiplier = self.seffects._indent_multiplier = self.deactivation._indent_multiplier = 2
+        self.vars._indent_multiplier = self.conditions._indent_multiplier = self.peffects._indent_multiplier = self.seffects._indent_multiplier = self.deactivation._indent_multiplier = 2
         tmp = self.name+" ->\n"
+        if len(self.vars.vars):
+            tmp += "  Variables ->\n"+str(self.vars)+"\n"
         if len(self.conditions.instructions):
             tmp += "  Trigger Conditions ->\n"+str(self.conditions)+"\n"
         tmp += "  Primary Effects ->\n"+str(self.peffects)+"\n"
@@ -73,5 +92,5 @@ class Quirk(object):
             tmp += "  Secondary Effects ->\n"+str(self.seffects)+"\n"
         if len(self.deactivation.instructions):
             tmp += "  Deactivation ->\n"+str(self.deactivation)
-        self.conditions._indent_multiplier, self.peffects._indent_multiplier, self.seffects._indent_multiplier, self.deactivation._indent_multiplier = im[0], im[1], im[2], im[3]
+        self.vars._indent_multiplier, self.conditions._indent_multiplier, self.peffects._indent_multiplier, self.seffects._indent_multiplier, self.deactivation._indent_multiplier = im[0], im[1], im[2], im[3], im[4]
         return tmp
