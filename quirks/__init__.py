@@ -5,6 +5,9 @@ class CStr(object):
         self.sep = sep
         self.lot = lot
 
+    def isolate(self): # Returns the list of traits as a list
+        return self.lot
+
     def __str__(self):
         mindex = len(self.lot) - 1
         tmp = ""
