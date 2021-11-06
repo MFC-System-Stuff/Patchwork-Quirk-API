@@ -1,4 +1,5 @@
-from quirks import Quirk, Instructions, Erasure, Voice
+from quirks.utils import Quirk, Instructions
+from quirks import Erasure, Voice
 
 print(Erasure, "\n")
 print(Voice, "\n")
@@ -23,3 +24,5 @@ Microphone = Quirk(
 )
 
 print(Microphone)
+
+print(Voice.seffects.__repr__(), Microphone.seffects.__repr__())

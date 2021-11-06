@@ -1,4 +1,4 @@
-from .utils import *
+from .utils import Quirk, Instructions
 
 class CStr(object):
     def __init__(self, sep, lot):
