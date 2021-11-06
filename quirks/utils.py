@@ -2,27 +2,13 @@ class TooManyPatches(Exception):
     pass
 
 
-class NullType(object):
-    def __init__(self): # This is an object Proxy to allow me to add my own methods to the None object
-        self.instructions = self
-        self._indent_multiplier = 0
-        for attr in dir(None):
-            if attr not in ("__class__"):
-                setattr(self, attr, getattr(None, attr))
-
-    def __len__(self):
-        return 0
-
-
-Null = NullType()
-
 class Instructions(object):
     def __init__(self, *instructions):
         self.instructions = [*instructions]
         self.is_patched = False
         self.original_instrutions = instructions
-        self.from_index = Null
-        self.to_index = Null
+        self.from_index = None
+        self.to_index = None
         self._indent_multiplier = 2
 
     def imitate(self, *indexes):
