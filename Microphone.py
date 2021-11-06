@@ -19,10 +19,9 @@ Microphone = Quirk(
   name="Microphone (Quilt)",
   conditions=Instructions(*Conditions),
   peffects=Instructions(*Voice.peffects.imitate(0)),
+  seffects=Instructions(),
   deactivation=Instructions(Deactivation[0].isolate()[0]),
   limit=8
 )
 
 print(Microphone)
-
-print(Voice.seffects.__repr__(), Microphone.seffects.__repr__())
