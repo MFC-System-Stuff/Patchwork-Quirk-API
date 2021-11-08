@@ -2,7 +2,11 @@ from .utils import Quirk, Instructions, Variables
 
 class CStr(object):
     def __init__(self, sep="", lot=[], prefix=None, **kwargs):
-        self.kwargs = kwargs
+        BASE_FORMATTING_RULES = {
+          "QH":"Quirk Holder",
+        }
+        BASE_FORMATTING_RULES.update(**kwargs)
+        self.kwargs = BASE_FORMATTING_RULES
         self.sep = sep
         self.lot = lot
         self.prefix = prefix
@@ -32,30 +36,9 @@ class CStr(object):
         return other + str(self)
 
 
-'''
-class VStr(object):
-    def __init__(self, text, **kwargs):
-        self.kwargs = kwargs
-        self.text = text
-
-    def __str__(self):
-        tmp = self.text
-        for key in self.kwargs:
-            tmp = tmp.replace('>'+key+'<', self.kwargs[key])
-        return tmp
-
-    def __repr__(self):
-        return f"VStr({self.text.__repr__()}, **{self.kwargs})"
-
-    def __add__(self, other):
-        return str(self) + other
-    def __radd__(self, other):
-        return other + str(self)
-'''
-
-
 class C(object):
-    QUIRK_HOLDER = "Quirk Holder"
+    def FMT(*statements, **kwargs):
+        return CStr(lot=statements, **kwargs)
 
     def OR(*statements, **kwargs):
         return CStr("OR", statements, **kwargs)
@@ -108,8 +91,8 @@ Erasure = Quirk(
     "Prevent access to quirk genes"
   ),
   seffects=Instructions(
-    CStr("Raise >QH<'s hair", QH=C.QUIRK_HOLDER),
-    CStr("Make >QH<'s eyes glow red", QH=C.QUIRK_HOLDER)
+    C.FMT("Raise >QH<'s hair"),
+    C.FMT("Make >QH<'s eyes glow red")
   ),
   deactivation=Instructions(
     C.OR("Intent to deactivate the quirk", "Blink")
@@ -123,7 +106,7 @@ Voice = Quirk(
     C.AND("Deep breath taken", "yell")
   ),
   peffects=Instructions(
-    CStr("Amplify >QH<'s voice to VOLUME", QH=C.QUIRK_HOLDER)
+    C.FMT("Amplify >QH<'s voice to VOLUME")
   ),
   deactivation=Instructions(
     "Stop shouting"
@@ -141,7 +124,7 @@ OneForAll = Quirk(
     C.OR("'Clench your buttcheeks and yell SMASH'", "Concentration")
   ),
   peffects=Instructions(
-    C.IF(C.AND(">QH< has Quirk", "Quirk is not >Q<", QH=C.QUIRK_HOLDER, Q="One For All"), "boost quirk with stockpiled energy"),
+    C.IF(C.AND(">QH< has Quirk", "Quirk is not >Q<", Q="One For All"), "boost quirk with stockpiled energy"),
     "Enhance body with stockpiled energy"
   ),
   seffects=Instructions(
@@ -158,19 +141,19 @@ OneForAll = Quirk(
 )
 
 
-GravityPull = Quirk(
+GravityPull = Quirk( # Inko's quirk
   name="Gravity Pull",
   conditions=Instructions(
-    "{QH} must angle hands towards object"
+    C.FMT("Hands angled towards >T<", T="Object"),
+    "Gesture for object to 'come here'"
   ),
   peffects=Instructions(
-    ""
+    C.FMT("Manipulate >T<'s gravity to float towards >QH<", T="Object")
   ),
   seffects=Instructions(
-    ""
   ),
   deactivation=Instructions(
-    ""
+    C.FMT("Stop motioning to >T<", T="Object")
   ),
   vars=Variables(
   )
