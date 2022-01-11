@@ -47,7 +47,7 @@ class C(object):
         return CStr("AND", statements, **kwargs)
 
     def IF(condition, statement, **kwargs):
-        return CStr("IF", (statement, condition), "THEN", **kwargs)
+        return CStr("IF", (condition, statement), "THEN", **kwargs)
 
     def SET(var, val):
         if isinstance(val, str):
