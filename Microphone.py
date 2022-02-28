@@ -1,7 +1,7 @@
 from copy import copy
 
 from quirks.utils import Quirk, Instructions
-from quirks import Erasure, Voice
+from quirks.ua.teachers import Erasure, Voice
 
 print(Erasure, "\n")
 print(Voice, "\n")

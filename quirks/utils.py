@@ -65,8 +65,9 @@ class Instructions(object):
 Quirks = []
 
 class Quirk(object):
-    def __init__(self, name="Base Quirk", conditions=Instructions(), peffects=Instructions(), seffects=Instructions(), deactivation=Instructions(), vars=Variables(), limit=100):
+    def __init__(self, name="Base Quirk", description=None, conditions=Instructions(), peffects=Instructions(), seffects=Instructions(), deactivation=Instructions(), vars=Variables(), limit=100):
         self.name = name
+        self.description = description
         self.conditions = conditions
         self.peffects = peffects
         self.seffects = seffects
@@ -83,6 +84,8 @@ class Quirk(object):
 
         self.vars._indent_multiplier = self.conditions._indent_multiplier = self.peffects._indent_multiplier = self.seffects._indent_multiplier = self.deactivation._indent_multiplier = 2
         tmp = self.name+" ->\n"
+        if self.description:
+            tmp += "  Description -> \"{str(self.description)}\""
         if len(self.vars.vars):
             tmp += "  Variables ->\n"+str(self.vars)+"\n"
         if len(self.conditions.instructions):
